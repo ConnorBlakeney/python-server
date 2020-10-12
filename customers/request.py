@@ -1,4 +1,6 @@
-import customers
+import sqlite3
+import json
+from models import Customer
 
 
 CUSTOMERS = [
@@ -6,7 +8,7 @@ CUSTOMERS = [
       "id": 1,
       "name": "Hannah Hall",
       "address": "7002 Chestnut Ct",
-      "customerId": 1,
+      "locationId": 1,
       "email": "",
       "password": ""
     },
@@ -14,7 +16,7 @@ CUSTOMERS = [
       "id": 2,
       "name": "Anna Anderson",
       "address": "7054 Cherry Lane",
-      "customerId": 2,
+      "locationId": 2,
       "email": "",
       "password": ""
     },
@@ -22,36 +24,85 @@ CUSTOMERS = [
       "id": 3,
       "name": "Jenny Juice",
       "address": "7002 Chestnut Ct",
-      "customerId": 3,
+      "locationId": 3,
       "email": "",
       "password": ""
-    },
-    {
-      "email": "test@test.com",
-      "password": "me",
-      "name": "connor blakeney",
-      "id": 4
     }
 ]
 
 
 def get_all_customers():
-    return CUSTOMERS
+    # Open c connection to the database
+    with sqlite3.connect("./kennel.db") as conn:
 
-# Function with a single parameter
+        # Just use these. It's c Black Box.
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT
+            c.id,
+            c.name,
+            c.address,
+            c.location_id
+            c.email,
+            c.password,
+        FROM customer c
+        """)
+
+        # Initialize an empty list to hold all animal representations
+        customers = []
+
+        # Convert rows of data into c Python list
+        dataset = db_cursor.fetchall()
+
+        # Iterate list of data returned from database
+        for row in dataset:
+
+            # Create an animal instance from the current row.
+            # Note that the database fields are specified in
+            # exact order of the parameters defined in the
+            # Animal class above.
+            customer = Customer(row['name'], row['address'],
+                            row['location_id'], row['email'], row['password'],
+                            row['id'])
+
+            customers.append(customer.__dict__)
+
+    # Use `json` package to properly serialize list as JSON
+    return json.dumps(customers)
+
+
 def get_single_customer(id):
-    # Variable to hold the found customer, if it exists
-    requested_customer = None
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    # Iterate the customerS list above. Very similar to the
-    # for..of loops you used in JavaScript.
-    for customer in CUSTOMERS:
-        # Dictionaries in Python use [] notation to find a key
-        # instead of the dot notation that JavaScript used.
-        if customer["id"] == id:
-            requested_customer = customer
+        # Use c ? parameter to inject c variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT
+            c.id,
+            c.name,
+            c.address,
+            c.location_id
+            c.email,
+            c.password,
+        FROM customer c
+        WHERE c.id = ?
+        """, ( id, ))
 
-    return requested_customer
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create an animal instance from the current row
+        customer = Customer(data['name'], data['address'],
+                        data['location_id'], data['email'], data['password'],
+                        data['id'])
+
+        return json.dumps(customer.__dict__)
+
 
 def create_customer(customer):
     # Get the id value of the last customer in the list
@@ -92,3 +143,4 @@ def update_customer(id, new_customer):
             # Found the customer. Update the value.
             CUSTOMERS[index] = new_customer
             break
+

@@ -58,3 +58,7 @@ INSERT INTO `Employee` VALUES (null, "Kristen Norris", "100 Main St", 1);
 INSERT INTO `Employee` VALUES (null, "Meg Ducharme", "404 Unknown Ct", 2);
 INSERT INTO `Employee` VALUES (null, "Hannah Hall", "204 Empty Ave", 1);
 INSERT INTO `Employee` VALUES (null, "Leah Hoefling", "200 Success Way", 2);
+
+SELECT
+    *
+FROM `location`;
