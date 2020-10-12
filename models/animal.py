@@ -4,6 +4,7 @@ class Animal():
     # special `self` parameter that every method on a class
     # needs as the first parameter.
     def __init__(self, name, breed, status, location_id, customer_id):
+        self.id = id
         self.name = name
         self.breed = breed
         self.status = status

@@ -1,3 +1,12 @@
 {
-    "python.pythonPath": "/Users/ConnorBlakeney2/.pyenv/versions/3.8.1/bin/python"
+    "python.pythonPath": "/Users/ConnorBlakeney2/.pyenv/versions/3.8.1/bin/python",
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "Python Kennels",
+            "database": "kennel.db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
 }
