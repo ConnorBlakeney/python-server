@@ -2,7 +2,6 @@ import sqlite3
 import json
 from models import Employee
 
-
 EMPLOYEES = [
     {
       "id": 1,
@@ -63,8 +62,8 @@ def get_all_employees():
             # exact order of the parameters defined in the
             # Animal class above.
             employee = Employee(row['name'],
-                            row['location_id'],
-                            row['id'])
+                                row['location_id'],
+                                row['id'])
 
             employees.append(employee.__dict__)
 
@@ -93,8 +92,8 @@ def get_single_employee(id):
 
         # Create an animal instance from the current row
         employee = Employee(data['name'],
-                        data['location_id'],
-                        data['id'])
+                            data['location_id'],
+                            data['id'])
 
         return json.dumps(employee.__dict__)
 
@@ -139,3 +138,29 @@ def update_employee(id, new_employee):
             EMPLOYEES[index] = new_employee
             break
 
+def get_employees_by_location(location):
+
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        select
+            e.id,
+            e.name,
+            e.location_id
+        from Employee a
+        WHERE e.location_id = ?
+        """, ( location, ))
+
+        employees = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            employee = Employee(row['name'],
+                                row['location_id'],
+                                row['id'])
+            employees.append(employee.__dict__)
+
+    return json.dumps(employees)

@@ -32,10 +32,10 @@ CUSTOMERS = [
 
 
 def get_all_customers():
-    # Open c connection to the database
+    # Open a connection to the database
     with sqlite3.connect("./kennel.db") as conn:
 
-        # Just use these. It's c Black Box.
+        # Just use these. It's a Black Box.
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
@@ -45,16 +45,15 @@ def get_all_customers():
             c.id,
             c.name,
             c.address,
-            c.location_id
             c.email,
-            c.password,
+            c.password
         FROM customer c
         """)
 
         # Initialize an empty list to hold all animal representations
         customers = []
 
-        # Convert rows of data into c Python list
+        # Convert rows of data into a Python list
         dataset = db_cursor.fetchall()
 
         # Iterate list of data returned from database
@@ -64,9 +63,8 @@ def get_all_customers():
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
             # Animal class above.
-            customer = Customer(row['name'], row['address'],
-                            row['location_id'], row['email'], row['password'],
-                            row['id'])
+            customer = Customer(row['id'], row['name'], row['address'],
+                            row['email'], row['password'])
 
             customers.append(customer.__dict__)
 
@@ -74,21 +72,21 @@ def get_all_customers():
     return json.dumps(customers)
 
 
+# Function with a single parameter
 def get_single_customer(id):
     with sqlite3.connect("./kennel.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
-        # Use c ? parameter to inject c variable's value
+        # Use a ? parameter to inject a variable's value
         # into the SQL statement.
         db_cursor.execute("""
         SELECT
             c.id,
             c.name,
             c.address,
-            c.location_id
             c.email,
-            c.password,
+            c.password
         FROM customer c
         WHERE c.id = ?
         """, ( id, ))
@@ -97,9 +95,8 @@ def get_single_customer(id):
         data = db_cursor.fetchone()
 
         # Create an animal instance from the current row
-        customer = Customer(data['name'], data['address'],
-                        data['location_id'], data['email'], data['password'],
-                        data['id'])
+        customer = Customer(data['id'], data['name'], data['address'], data['email'],
+                        data['password'])
 
         return json.dumps(customer.__dict__)
 
@@ -150,7 +147,6 @@ def get_customers_by_email(email):
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
-        # Write the SQL query to get the information you want
         db_cursor.execute("""
         select
             c.id,
@@ -162,12 +158,10 @@ def get_customers_by_email(email):
         WHERE c.email = ?
         """, ( email, ))
 
-        customers = []
-        dataset = db_cursor.fetchall()
+        data = db_cursor.fetchone()
 
-        for row in dataset:
-            customer = Customer(row['id'], row['name'], row['address'])
-            customers.append(customer.__dict__)
+        # Create an customer instance from the current row
+        customer = Customer(data['id'], data['name'], data['address'], data['email'], data['password'])
 
-    return json.dumps(customers)
-
+        # Return the JSON serialized Customer object
+        return json.dumps(customer.__dict__)
