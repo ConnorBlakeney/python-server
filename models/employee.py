@@ -6,4 +6,4 @@ class Employee():
     def __init__(self, name, location_id, unique_id):
         self.id = unique_id
         self.name = name
-        self.location_id = location_id
+        self.locationId = location_id

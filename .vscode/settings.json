@@ -4,8 +4,8 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "name": "Python Kennels",
-            "database": "kennel.db"
+            "name": "Python Kennel",
+            "database": "${workspaceFolder:python-server}/kennel.db"
         }
     ],
     "sqltools.useNodeRuntime": true

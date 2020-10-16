@@ -92,13 +92,13 @@ class HandleRequests(BaseHTTPRequestHandler):
             # query parameter that specified the customer
             # email as a filtering value?
             if key == "email" and resource == "customers":
-                response = get_customer_by_email(value)
+                response = get_customers_by_email(value)
             elif key == "location_id" and resource == "animals":
                 response = get_animals_by_location(int(value))
             elif key == "status" and resource == "animals":
                 response = get_animals_by_status(value)
             elif key == "location_id" and resource == "employees":
-                response = get_employee_by_location(value)
+                response = get_employees_by_location(value)
 
         self.wfile.write(response.encode())
 
@@ -106,7 +106,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-        self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type')
+        self.send_header('Access-Control-Allow-Headers', 'X-Requested-With')
         self.end_headers()
 
     # Here's a method on the class that overrides the parent's method.
